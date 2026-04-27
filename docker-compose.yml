@@ -1,0 +1,53 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE:      ${MYSQL_DATABASE:-drupal}
+      MYSQL_USER:          ${MYSQL_USER:-drupal}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD:-drupal}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
+             "-uroot", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+      start_period: 30s
+
+  drupal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8080}:80"
+    environment:
+      MYSQL_HOST:            db
+      MYSQL_DATABASE:        ${MYSQL_DATABASE:-drupal}
+      MYSQL_USER:            ${MYSQL_USER:-drupal}
+      MYSQL_PASSWORD:        ${MYSQL_PASSWORD:-drupal}
+      DRUPAL_ADMIN_USER:     ${DRUPAL_ADMIN_USER:-admin}
+      DRUPAL_ADMIN_PASSWORD: ${DRUPAL_ADMIN_PASSWORD:-admin}
+      DRUPAL_SITE_NAME:      ${DRUPAL_SITE_NAME:-LMS Test}
+      DRUPAL_SITE_MAIL:      ${DRUPAL_SITE_MAIL:-lms@example.com}
+    volumes:
+      # LMS custom modules – read-only bind-mounts from the git submodules
+      - ./lms/user_tools:/var/www/html/drupal10/web/modules/custom/user_tools:ro
+      - ./lms/rating_list:/var/www/html/drupal10/web/modules/custom/rating_list:ro
+      - ./lms/league:/var/www/html/drupal10/web/modules/custom/league:ro
+      # LMS custom theme – read-only bind-mount from the git submodule
+      - ./lms/lms_theme:/var/www/html/drupal10/web/themes/custom/lms_theme:ro
+      # Persistent Drupal public files (uploads, generated files, etc.)
+      - drupal_files:/var/www/html/drupal10/web/sites/default/files
+      # Seed database directory (host-side ./seed folder)
+      - ./seed:/seed
+
+volumes:
+  db_data:
+  drupal_files:

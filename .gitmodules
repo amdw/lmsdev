@@ -1,0 +1,16 @@
+[submodule "lms/league"]
+	path = lms/league
+	url = https://git.drupalcode.org/sandbox/malcolmp-2152013.git
+	branch = 1.0.x-dev
+[submodule "lms/user_tools"]
+	path = lms/user_tools
+	url = http://git.drupal.org/project/user_tools.git
+	branch = 2.0.x
+[submodule "lms/rating_list"]
+	path = lms/rating_list
+	url = http://git.drupal.org/project/rating_list.git
+	branch = 1.0.x
+[submodule "lms/lms_theme"]
+	path = lms/lms_theme
+	url = https://git.drupalcode.org/sandbox/malcolmp-3448608.git
+	branch = 1.0.x
