@@ -227,6 +227,70 @@ git submodule update --remote lms/league
 
 ---
 
+## JSON API
+
+The LMS exposes a read-only JSON API at `/lmsrest/league/{type}`. All endpoints
+accept a JSON POST body and return JSON. No authentication or CSRF token is
+required for anonymous access.
+
+The `org` field in every request is the numeric organisation ID. With the
+bundled seed the Middlesex Chess League is always **org 1**.
+
+### Endpoints
+
+| Endpoint                            | Returns                                     |
+|-------------------------------------|---------------------------------------------|
+| `/lmsrest/league/event`             | Fixture list for a named division           |
+| `/lmsrest/league/match`             | Board-by-board match cards for a division   |
+| `/lmsrest/league/table`             | League table for a named division           |
+| `/lmsrest/league/seasons`           | List of seasons for an organisation         |
+| `/lmsrest/league/seasonsWithEvents` | Seasons with their division names           |
+| `/lmsrest/league/club`              | All fixtures for a named club (4-char code) |
+
+Drupal's REST module accepts the response format either as a query parameter
+(`?_format=json`) or via the standard `Accept` header. The examples below use
+the `Accept` header, which is cleaner when calling from code.
+
+### Quick-start examples
+
+**Fixture list for Division 1:**
+
+```bash
+curl -s -X POST "http://localhost:8080/lmsrest/league/event" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"org":1,"name":"Division 1"}' | python3 -m json.tool
+```
+
+**Board-by-board match cards for Division 2:**
+
+```bash
+curl -s -X POST "http://localhost:8080/lmsrest/league/match" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"org":1,"name":"Division 2"}' | python3 -m json.tool
+```
+
+**League table for Division 3:**
+
+```bash
+curl -s -X POST "http://localhost:8080/lmsrest/league/table" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"org":1,"name":"Division 3"}' | python3 -m json.tool
+```
+
+**All seasons (returns a `{sid: name}` map):**
+
+```bash
+curl -s -X POST "http://localhost:8080/lmsrest/league/seasons" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"org":1}' | python3 -m json.tool
+```
+
+---
+
 ## Seed database
 
 The seed file (`seed/seed.sql.gz`) captures the full database state after

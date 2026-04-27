@@ -54,6 +54,15 @@ echo "=== Enabling REST API and content sync ==="
 $DRUSH pm:enable rest restui -y
 $DRUSH pm:enable single_content_sync -y
 
+echo "=== Enabling LMS REST resource ==="
+$DRUSH php:eval "
+\$c = \Drupal::configFactory()->getEditable('rest.resource.lmsrestp');
+\$c->set('id', 'lmsrestp')->set('plugin_id', 'lmsrestp')->set('granularity', 'resource');
+\$c->set('configuration', ['methods' => ['POST'], 'formats' => ['json'], 'authentication' => ['cookie']]);
+\$c->save();
+"
+$DRUSH role:perm:add anonymous "restful post lmsrestp" -y
+
 echo "=== Disabling internal page cache ==="
 # The cache means anonymous users see stale pages; not suitable for dev.
 $DRUSH pm:uninstall page_cache -y
