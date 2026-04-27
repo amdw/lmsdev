@@ -272,12 +272,12 @@ Some steps from `lms_install.txt` require the Drupal admin UI and have not been
 automated. Perform them once after the first install, then export a new seed to
 preserve them.
 
-| Step                              | Where in the UI                                                       |
-|-----------------------------------|-----------------------------------------------------------------------|
-| Block layout (menus, navigation)  | Admin › Structure › Block Layout                                      |
-| Add an Organisation               | Tools menu › Add Organisation                                         |
-| User field visibility             | Admin › Configuration › People › Account Settings › Manage Display   |
-| Google Maps field on Organisation | Admin › Structure › Organisation › Manage Display                     |
+| Step                              | Where in the UI                                                        |
+|-----------------------------------|------------------------------------------------------------------------|
+| Block layout (menus, navigation)  | Admin › Structure › Block Layout                                       |
+| Add an Organisation               | Admin (top menu) › Tools (left sidebar) › Add Club/League Organisation |
+| User field visibility             | Admin › Configuration › People › Account Settings › Manage Display     |
+| Google Maps field on Organisation | Admin › Structure › Organisation › Manage Display                      |
 
 See `lms_install.txt` steps 6, 9, and 10 for the full details.
 
