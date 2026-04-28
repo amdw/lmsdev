@@ -369,3 +369,13 @@ lmstest/
     ├── user_tools/
     └── lms_theme/
 ```
+
+---
+
+## Licence
+
+All files in this repository are copyright Andrew Medworth and licensed under
+the [Apache License, Version 2.0](LICENSE), with the following exception:
+
+- **`lms_install.txt`** — written by the LMS developer and reproduced here for
+  reference. It is not covered by the Apache licence.
