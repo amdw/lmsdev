@@ -42,9 +42,9 @@ $DRUSH theme:enable bootstrap5 -y
 echo "=== Enabling LMS custom modules ==="
 # Dependency order: user_tools → rating_list → rating_fide → league → *_test
 $DRUSH pm:enable user_tools -y
-$DRUSH pm:enable rating_list rating_fide rating_test -y
+$DRUSH pm:enable rating_list rating_fide rating_test rating_ecf -y
 $DRUSH pm:enable league -y
-$DRUSH pm:enable league_test -y
+$DRUSH pm:enable league_ecf -y
 
 echo "=== Enabling lms_theme (requires league + user_tools to be present) ==="
 $DRUSH theme:enable lms_theme -y
