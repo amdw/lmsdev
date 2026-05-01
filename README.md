@@ -229,18 +229,16 @@ git submodule update --remote lms/league
 
 ## JSON API
 
-Two API versions are available. Both accept JSON POST bodies and return JSON
-with no authentication required for anonymous access.
-
-The `org` field in every request is the numeric organisation ID. With the
-bundled seed the Middlesex Chess League is always **org 1**.
+Two API versions are available. With the bundled seed the Middlesex Chess
+League is always **org 1**.
 
 ---
 
 ### v1 API — `/lmsrest/league/{type}`
 
-The original API. Responses use tabular array structures (header row + data
-rows) mirroring the internal HTML rendering.
+The original API. No authentication required. Accepts JSON POST bodies and
+returns JSON; responses use tabular array structures (header row + data rows)
+mirroring the internal HTML rendering.
 
 Drupal's REST module accepts the response format either as a query parameter
 (`?_format=json`) or via the standard `Accept` header.
@@ -292,87 +290,19 @@ curl -s -X POST "http://localhost:8080/lmsrest/league/seasons" \
 
 ---
 
-### v2 API
+### v2 API — `/lmsrest/v2/`
 
-A RESTful, object-structured API. All endpoints use `GET`. Resources are
-addressed by numeric ID; use the discovery endpoints to find IDs before
-fetching results.
+A RESTful, object-structured API using `GET` requests and numeric IDs.
+Requires an API key — keys are per-user and carry the same permissions as
+their owner. Create and manage keys at `/user/{uid}/api-keys`.
 
-| Endpoint                            | Returns                                      |
-|-------------------------------------|----------------------------------------------|
-| `/lmsrest/v2/org/{org}/seasons`     | Seasons for an organisation                  |
-| `/lmsrest/v2/season/{sid}/events`   | Events (divisions) in a season               |
-| `/lmsrest/v2/event/{eid}/results`   | Match results for an event, board by board   |
+Full documentation, including request/response schemas and an interactive
+explorer, is served by the application itself:
 
-#### Discovery flow
-
-```
-org/1/seasons  →  season/{sid}/events  →  event/{eid}/results
-```
-
-#### `GET /lmsrest/v2/org/{org}/seasons`
-
-Returns an array of season objects:
-
-| Field  | Type   | Description       |
-|--------|--------|-------------------|
-| `id`   | int    | Season ID (`sid`) |
-| `name` | string | Season name       |
-
-```bash
-curl -s "http://localhost:8080/lmsrest/v2/org/1/seasons" | python3 -m json.tool
-```
-
-#### `GET /lmsrest/v2/season/{sid}/events`
-
-Returns an array of event objects for the given season:
-
-| Field  | Type   | Description        |
-|--------|--------|--------------------|
-| `id`   | int    | Event ID (`eid`)   |
-| `name` | string | Division name      |
-
-```bash
-curl -s "http://localhost:8080/lmsrest/v2/season/1/events" | python3 -m json.tool
-```
-
-#### `GET /lmsrest/v2/event/{eid}/results`
-
-Returns an array of fixture objects. Each fixture:
-
-| Field        | Type   | Description                                        |
-|--------------|--------|----------------------------------------------------|
-| `fixture_id` | int    | Internal LMS fixture ID                            |
-| `round`      | int    | Round number                                       |
-| `date`       | string | Match date (`YYYY-MM-DD`), or `null` if not set    |
-| `home_team`  | string | Home team name                                     |
-| `away_team`  | string | Away team name                                     |
-| `home_score` | float  | Home team match points (wins=1, draws=0.5)         |
-| `away_score` | float  | Away team match points                             |
-| `games`      | array  | Board-by-board game objects (see below)            |
-
-Each `games` entry:
-
-| Field         | Type   | Description                                           |
-|---------------|--------|-------------------------------------------------------|
-| `board`       | int    | Board number                                          |
-| `home_colour` | string | Chess colour of the home player: `"W"` or `"B"`      |
-| `result`      | string | Game result from White's perspective: `"1-0"`, `"½-½"`, `"0-1"`, etc. |
-| `home_player` | object | Home player (see below)                               |
-| `away_player` | object | Away player (see below)                               |
-
-Each player object:
-
-| Field      | Type        | Description                                      |
-|------------|-------------|--------------------------------------------------|
-| `lms_id`   | int         | LMS player ID (`league_player.pid`)              |
-| `ecf_code` | string\|null | Full ECF rating code including check digit (e.g. `"279704F"`), or `null` if unknown. Falls back to numeric string if `rating_ecf` is not enabled. |
-| `name`     | string      | Player name in `"Surname, Firstname"` format     |
-| `rating`   | int\|null   | Rating used on the match card, or `null` if none |
-
-```bash
-curl -s "http://localhost:8080/lmsrest/v2/event/1/results" | python3 -m json.tool
-```
+| URL                          | Contents                              |
+|------------------------------|---------------------------------------|
+| `http://localhost:8080/lmsrest/v2` | Interactive Swagger UI          |
+| `http://localhost:8080/lmsrest/v2/openapi.yaml` | Raw OpenAPI 3.1 spec |
 
 ---
 
