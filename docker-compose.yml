@@ -1,7 +1,7 @@
 services:
   db:
     image: mysql:8.0
-    restart: unless-stopped
+    restart: no
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
       MYSQL_DATABASE:      ${MYSQL_DATABASE:-drupal}
@@ -21,7 +21,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: unless-stopped
+    restart: no
     depends_on:
       db:
         condition: service_healthy
