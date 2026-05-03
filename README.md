@@ -14,6 +14,9 @@ The setup provides:
 - A seed database that is automatically imported on first start, skipping the ~3
   minute full installation
 
+The setup was based on [these installation
+instructions](https://git.drupalcode.org/sandbox/malcolmp-2152013/-/raw/1.0.x-dev/LMSInstall.txt?ref_type=heads).
+
 ---
 
 ## Prerequisites
@@ -332,9 +335,10 @@ docker compose up -d     # runs full installation (~3–5 min)
 
 ## Remaining manual configuration
 
-Some steps from `lms_install.txt` require the Drupal admin UI and have not been
-automated. Perform them once after the first install, then export a new seed to
-preserve them.
+Some steps from
+[`LMSInstall.txt`](https://git.drupalcode.org/sandbox/malcolmp-2152013/-/raw/1.0.x-dev/LMSInstall.txt?ref_type=heads)
+require the Drupal admin UI and have not been automated. Perform them once after
+the first install, then export a new seed to preserve them.
 
 | Step                              | Where in the UI                                                        |
 |-----------------------------------|------------------------------------------------------------------------|
@@ -343,7 +347,7 @@ preserve them.
 | User field visibility             | Admin › Configuration › People › Account Settings › Manage Display     |
 | Google Maps field on Organisation | Admin › Structure › Organisation › Manage Display                      |
 
-See `lms_install.txt` steps 6, 9, and 10 for the full details.
+See `LMSInstall.txt` steps 6, 9, and 10 for the full details.
 
 ---
 
@@ -372,10 +376,21 @@ lmstest/
 
 ---
 
+## Contributing
+
+Much development seems to take place not in the main `league` module but in
+[this sandbox](https://www.drupal.org/sandbox/malcolmp/2152013).
+
+Changes are typically associated with issues in [this issue
+tracker](https://www.drupal.org/project/issues/2152013). Once an issue exists,
+an "issue fork" can be created, on which development can be done.
+
+---
+
 ## Licence
 
 All files in this repository are copyright Andrew Medworth and licensed under
-the [Apache License, Version 2.0](LICENSE), with the following exception:
+the [Apache License, Version 2.0](LICENSE).
 
-- **`lms_install.txt`** — written by the LMS developer and reproduced here for
-  reference. It is not covered by the Apache licence.
+Any files in submodules are owned by their respective owners and licensed under
+their own terms.
