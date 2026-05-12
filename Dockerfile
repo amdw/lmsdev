@@ -45,7 +45,8 @@ WORKDIR /var/www/html
 RUN --mount=type=cache,target=/root/.composer/cache \
     composer create-project drupal/recommended-project:10.6.2 drupal10 \
         --no-interaction --no-install \
-    && cd drupal10 && composer install --no-interaction
+    && cd drupal10 && composer install --no-interaction \
+    && sed -i 's|^\([[:space:]]*\)# RewriteBase /$|\1RewriteBase /lmsdev|' web/.htaccess
 
 WORKDIR /var/www/html/drupal10
 

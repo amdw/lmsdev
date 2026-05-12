@@ -26,7 +26,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost/"]
+      test: ["CMD", "curl", "-sf", "http://localhost/lmsdev/"]
       interval: 15s
       timeout: 10s
       retries: 20
@@ -73,7 +73,7 @@ services:
       drupal:
         condition: service_healthy
     environment:
-      LMS_TEST_URL:    http://drupal
+      LMS_TEST_URL:    http://drupal/lmsdev
       MYSQL_HOST:      db
       MYSQL_DATABASE:  ${MYSQL_DATABASE:-drupal}
       MYSQL_USER:      ${MYSQL_USER:-drupal}
