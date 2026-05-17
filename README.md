@@ -64,7 +64,7 @@ SSH tunnel to access it from your local browser:
 ssh -L 8080:localhost:8080 your-server
 ```
 
-Then open `http://localhost:8080/` on your local machine.
+Then open `http://localhost:8080/lmsdev/` on your local machine.
 
 ---
 
@@ -164,7 +164,7 @@ typically within a few seconds.
 If running locally:
 
 ```
-http://localhost:8080/
+http://localhost:8080/lmsdev/
 ```
 
 If on a remote server, set up the SSH tunnel first (see [Network
@@ -232,34 +232,33 @@ git submodule update --remote lms/league
 
 ## JSON API
 
-The LMS exposes a read-only JSON API at `/lmsrest/league/{type}`. All endpoints
-accept a JSON POST body and return JSON. No authentication or CSRF token is
-required for anonymous access.
+Two API versions are available. With the bundled seed the Middlesex Chess
+League is always **org 1**.
 
-The `org` field in every request is the numeric organisation ID. With the
-bundled seed the Middlesex Chess League is always **org 1**.
+---
 
-### Endpoints
+### v1 API — `/lmsdev/lmsrest/league/{type}`
 
-| Endpoint                            | Returns                                     |
-|-------------------------------------|---------------------------------------------|
-| `/lmsrest/league/event`             | Fixture list for a named division           |
-| `/lmsrest/league/match`             | Board-by-board match cards for a division   |
-| `/lmsrest/league/table`             | League table for a named division           |
-| `/lmsrest/league/seasons`           | List of seasons for an organisation         |
-| `/lmsrest/league/seasonsWithEvents` | Seasons with their division names           |
-| `/lmsrest/league/club`              | All fixtures for a named club (4-char code) |
+The original API. No authentication required. Accepts JSON POST bodies and
+returns JSON; responses use tabular array structures (header row + data rows)
+mirroring the internal HTML rendering.
 
 Drupal's REST module accepts the response format either as a query parameter
-(`?_format=json`) or via the standard `Accept` header. The examples below use
-the `Accept` header, which is cleaner when calling from code.
+(`?_format=json`) or via the standard `Accept` header.
 
-### Quick-start examples
+| Endpoint                                   | Returns                                     |
+|--------------------------------------------|---------------------------------------------|
+| `/lmsdev/lmsrest/league/event`             | Fixture list for a named division           |
+| `/lmsdev/lmsrest/league/match`             | Board-by-board match cards for a division   |
+| `/lmsdev/lmsrest/league/table`             | League table for a named division           |
+| `/lmsdev/lmsrest/league/seasons`           | List of seasons for an organisation         |
+| `/lmsdev/lmsrest/league/seasonsWithEvents` | Seasons with their division names           |
+| `/lmsdev/lmsrest/league/club`              | All fixtures for a named club (4-char code) |
 
 **Fixture list for Division 1:**
 
 ```bash
-curl -s -X POST "http://localhost:8080/lmsrest/league/event" \
+curl -s -X POST "http://localhost:8080/lmsdev/lmsrest/league/event" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -d '{"org":1,"name":"Division 1"}' | python3 -m json.tool
@@ -268,7 +267,7 @@ curl -s -X POST "http://localhost:8080/lmsrest/league/event" \
 **Board-by-board match cards for Division 2:**
 
 ```bash
-curl -s -X POST "http://localhost:8080/lmsrest/league/match" \
+curl -s -X POST "http://localhost:8080/lmsdev/lmsrest/league/match" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -d '{"org":1,"name":"Division 2"}' | python3 -m json.tool
@@ -277,7 +276,7 @@ curl -s -X POST "http://localhost:8080/lmsrest/league/match" \
 **League table for Division 3:**
 
 ```bash
-curl -s -X POST "http://localhost:8080/lmsrest/league/table" \
+curl -s -X POST "http://localhost:8080/lmsdev/lmsrest/league/table" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -d '{"org":1,"name":"Division 3"}' | python3 -m json.tool
@@ -286,11 +285,27 @@ curl -s -X POST "http://localhost:8080/lmsrest/league/table" \
 **All seasons (returns a `{sid: name}` map):**
 
 ```bash
-curl -s -X POST "http://localhost:8080/lmsrest/league/seasons" \
+curl -s -X POST "http://localhost:8080/lmsdev/lmsrest/league/seasons" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -d '{"org":1}' | python3 -m json.tool
 ```
+
+---
+
+### v2 API — `/lmsdev/lmsrest/v2/`
+
+A RESTful, object-structured API using `GET` requests and numeric IDs.
+Requires an API key — keys are per-user and carry the same permissions as
+their owner. Create and manage keys at `/lmsdev/user/{uid}/api-keys`.
+
+Full documentation, including request/response schemas and an interactive
+explorer, is served by the application itself:
+
+| URL                                                    | Contents               |
+|--------------------------------------------------------|------------------------|
+| `http://localhost:8080/lmsdev/lmsrest/v2`.             | Interactive Swagger UI |
+| `http://localhost:8080/lmsdev/lmsrest/v2/openapi.yaml` | Raw OpenAPI 3.1 spec.  |
 
 ---
 

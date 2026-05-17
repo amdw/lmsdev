@@ -120,7 +120,7 @@ fi
 
 echo ""
 echo "=== LMS installation complete ==="
-echo "  Site URL : http://localhost:${WEB_PORT:-8080}/"
+echo "  Site URL : http://localhost:${WEB_PORT:-8080}/lmsdev/"
 echo "  Admin    : ${DRUPAL_ADMIN_USER:-admin} / ${DRUPAL_ADMIN_PASSWORD:-admin}"
 echo ""
 echo "Next steps (manual, via the Drupal admin UI):"

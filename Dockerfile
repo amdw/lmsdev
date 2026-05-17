@@ -4,6 +4,7 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
+    curl \
     default-mysql-client \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
@@ -67,6 +68,9 @@ RUN --mount=type=cache,target=/root/.composer/cache \
         'drupal/book:^1.0' \
         'drupal/restui:^1.21' \
         'drupal/single_content_sync:^1.4'
+
+# composer require re-runs scaffold and overwrites .htaccess, so set RewriteBase here
+RUN sed -i 's|^\([[:space:]]*\)# RewriteBase /$|\1RewriteBase /lmsdev|' web/.htaccess
 
 # Scaffold directories (custom module/theme dirs + config sync dir)
 RUN mkdir -p web/modules/contrib \
