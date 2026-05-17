@@ -1,7 +1,7 @@
 [submodule "lms/league"]
 	path = lms/league
-	url = https://git.drupalcode.org/issue/2152013-3588087.git
-	branch = apiv2
+	url = https://git.drupalcode.org/sandbox/malcolmp-2152013.git
+	branch = 1.0.x-dev
 [submodule "lms/user_tools"]
 	path = lms/user_tools
 	url = http://git.drupal.org/project/user_tools.git
