@@ -45,8 +45,7 @@ WORKDIR /var/www/html
 RUN --mount=type=cache,target=/root/.composer/cache \
     composer create-project drupal/recommended-project:10.6.2 drupal10 \
         --no-interaction --no-install \
-    && cd drupal10 && composer install --no-interaction \
-    && sed -i 's|^\([[:space:]]*\)# RewriteBase /$|\1RewriteBase /lmsdev|' web/.htaccess
+    && cd drupal10 && composer install --no-interaction
 
 WORKDIR /var/www/html/drupal10
 
@@ -69,6 +68,9 @@ RUN --mount=type=cache,target=/root/.composer/cache \
         'drupal/book:^1.0' \
         'drupal/restui:^1.21' \
         'drupal/single_content_sync:^1.4'
+
+# composer require re-runs scaffold and overwrites .htaccess, so set RewriteBase here
+RUN sed -i 's|^\([[:space:]]*\)# RewriteBase /$|\1RewriteBase /lmsdev|' web/.htaccess
 
 # Scaffold directories (custom module/theme dirs + config sync dir)
 RUN mkdir -p web/modules/contrib \
