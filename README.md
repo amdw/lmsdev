@@ -230,51 +230,6 @@ git submodule update --remote lms/league
 
 ---
 
-## Testing
-
-Tests live in `lms/league/tests/` and are run inside Docker using a minimal
-PHP 8.2 CLI image (`Dockerfile.test`) that is separate from the main Drupal
-container.
-
-### Unit tests
-
-Pure-PHP tests with no network or database dependency. They cover the API v2
-result-mapping logic, enum conversions, `ApiKey` key generation and hashing,
-and the `APIV2::playerObject` formatting logic.
-
-```bash
-docker compose run --rm phpunit
-```
-
-The test image is built automatically the first time. Subsequent runs reuse the
-cached image and the `vendor/` directory written into `lms/league/`, so they
-complete in under a second.
-
-### HTTP integration tests
-
-End-to-end tests that make real HTTP requests against a running Drupal instance
-loaded with the seed database. They cover all three v2 API endpoints
-(`/seasons`, `/events`, `/results`) including authentication, 404 handling, and
-full response-body structure.
-
-```bash
-docker compose --profile test-http run --rm test-http
-```
-
-This command is self-contained: if the database and Drupal containers are not
-already running, Docker Compose starts them in dependency order (MySQL
-healthcheck → Drupal healthcheck → tests). If they are already running from a
-`docker compose up -d`, the test container joins the existing stack.
-
-The test runner creates a throwaway API key before each test class and deletes
-it afterwards, so the seed database is left in its original state.
-
-> **Note:** the first run after a clean checkout will import the seed database
-> (~10 s) and wait for Drupal's healthcheck to pass before tests begin. Allow
-> up to three minutes on a cold start.
-
----
-
 ## JSON API
 
 Two API versions are available. With the bundled seed the Middlesex Chess
