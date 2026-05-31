@@ -213,6 +213,22 @@ your shell:
 alias drush='docker compose exec drupal /var/www/html/drupal10/vendor/bin/drush --root=/var/www/html/drupal10/web'
 ```
 
+### Running database queries
+
+MySQL is only reachable from inside the `drupal` container. Use `--skip-ssl`
+to suppress the TLS handshake that the containerised client enables by default:
+
+```bash
+docker compose exec drupal bash -c \
+    "mysql --skip-ssl -h db -udrupal -pdrupal drupal -e 'SELECT * FROM league_event LIMIT 5;'"
+```
+
+For an interactive session:
+
+```bash
+docker compose exec drupal bash -c "mysql --skip-ssl -h db -udrupal -pdrupal drupal"
+```
+
 ### Keeping submodules up to date
 
 Each `lms/` directory is a normal git repository. To pull the latest commits
