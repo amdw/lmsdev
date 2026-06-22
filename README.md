@@ -205,9 +205,7 @@ docker compose exec drupal bash
 drush cr
 ```
 
-The `drush` binary is at `/var/www/html/drupal10/vendor/bin/drush` with
-`--root=/var/www/html/drupal10/web`. For convenience you can add this alias to
-your shell:
+For convenience you can add a host-side alias to your shell:
 
 ```bash
 alias drush='docker compose exec drupal /var/www/html/drupal10/vendor/bin/drush --root=/var/www/html/drupal10/web'
@@ -215,8 +213,7 @@ alias drush='docker compose exec drupal /var/www/html/drupal10/vendor/bin/drush 
 
 ### Running database queries
 
-MySQL is only reachable from inside the `drupal` container. Use `--skip-ssl`
-to suppress the TLS handshake that the containerised client enables by default:
+MySQL is only reachable from inside the `drupal` container:
 
 ```bash
 docker compose exec drupal bash -c \
@@ -313,14 +310,16 @@ curl -s -X POST "http://localhost:8080/lmsdev/lmsrest/league/seasons" \
 
 A RESTful, object-structured API using `GET` requests and numeric IDs.
 Requires an API key — keys are per-user and carry the same permissions as
-their owner. Create and manage keys at `/lmsdev/user/{uid}/api-keys`.
+their owner. Create and manage keys at `/lmsdev/user/1/api-keys` in the
+Drupal admin UI. See `CLAUDE.md` for how to generate keys from the command
+line.
 
 Full documentation, including request/response schemas and an interactive
 explorer, is served by the application itself:
 
 | URL                                                    | Contents               |
 |--------------------------------------------------------|------------------------|
-| `http://localhost:8080/lmsdev/lmsrest/v2`.             | Interactive Swagger UI |
+| `http://localhost:8080/lmsdev/lmsrest/v2`              | Interactive Swagger UI |
 | `http://localhost:8080/lmsdev/lmsrest/v2/openapi.yaml` | Raw OpenAPI 3.1 spec.  |
 
 ---
